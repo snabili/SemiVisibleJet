@@ -1,0 +1,95 @@
+#ifndef EmergingJetGenAnalysis_EMJGenAnalyzer_EMJGenEvent_h
+#define EmergingJetGenAnalysis_EMJGenAnalyzer_EMJGenEvent_h
+
+// Class describing the content of output for EmergingJetAnalyzer
+
+#include <vector>
+#include <functional>
+
+#include "TLorentzVector.h"
+
+#include "EmergingJetGenAnalysis/EMJGenAnalyzer/interface/OutputTree.h"
+#define DEFAULTVALUE -1
+
+using std::vector;
+
+namespace EMJGen
+{
+  class Track;
+  class Vertex;
+  class Jet;
+  class GenPart;
+  class Event {
+  public:
+    Event() {}
+    ~Event(){}
+    void Init() {
+      run                  = DEFAULTVALUE;
+      lumi                 = DEFAULTVALUE;
+      event                = DEFAULTVALUE;
+
+      genpart_vector.clear();
+    };
+    int    run                 ;
+    int    lumi                ;
+    int    event               ;
+
+    vector<GenPart> genpart_vector;
+  }; 
+  class GenPart {
+  public:
+    GenPart(){}
+    ~GenPart(){}
+    void Init(){
+      index                = DEFAULTVALUE;
+      pt                   = DEFAULTVALUE;
+    }
+    int    index               ;
+    float  pt                  ;
+  };
+
+// Turn vector of objects, into vector of member variable by calling func(object)
+// Output is placed in provided vector reference
+template <typename Object, typename T>
+void
+vectorize(const vector<Object>& input, std::function<T (const Object &)> func, vector<T>& output)
+{
+  output.clear();
+  output.reserve(input.size()); // Doesn't reduce capacity
+  for (const auto& obj : input) {
+    output.push_back( func(obj) );
+  }
+}
+
+// Version of vectorize() that returns a vector object
+template <typename Object, typename T>
+vector<T>
+vectorize_new(const vector<Object>& input, std::function<T (const Object &)> func)
+{
+  vector<T> output;
+  vectorize(input, func, output);
+  return output;
+}
+
+using EMJGen::Event;
+using EMJGen::GenPart;
+
+void
+WriteEventToOutput(const Event& event, EMJGen::OutputTree* otree)
+{
+  otree->Init(); // Reset all values and clear all vectors
+  // Event-level variables, e.g. int, float, etc.
+  {
+    otree->run                  = event.run                 ;
+    otree->lumi                 = event.lumi                ;
+    otree->event                = event.event               ;
+  }
+  // generator-level variables
+  {
+    vectorize<GenPart, int   >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.index               ;}, otree->genpart_index               );
+    vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.pt                  ;}, otree->genpart_pt                  );
+  }
+}
+
+
+#endif

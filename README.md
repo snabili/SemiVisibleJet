@@ -1,2 +1,0 @@
-# EmergingJetGenAnalysis
-for gen plots
