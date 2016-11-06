@@ -192,7 +192,6 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
     genpart_.Init();
     genpart_.index = genpart_index_;
     genpart_.pt=(*igen).pt();
-    std::cout<<(*igen).pt()<<std::endl;
     event_.genpart_vector.push_back(genpart_);
     genpart_index_++;
   }

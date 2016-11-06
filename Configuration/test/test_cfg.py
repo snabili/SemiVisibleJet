@@ -116,7 +116,9 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
 process.source = cms.Source("PoolSource",
     # eventsToProcess = cms.untracked.VEventRange("1:36:3523-1:36:3523"),
     fileNames = cms.untracked.vstring(
-        'file:/data/users/eno/emergingJets/2016-09-11.root'
+        '/store/group/phys_exotica/EmergingJets/EmergingJets_ModelB_TuneCUETP8M1_13TeV_pythia8Mod/AODSIM-v1/160202\
+_073524/0000/aodsim_106.root'
+        #'file:/data/users/eno/emergingJets/2016-09-11.root'
     ),
 )
 
