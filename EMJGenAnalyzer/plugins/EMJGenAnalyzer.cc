@@ -226,7 +226,7 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
       }
     }
 
-    //look for dark quarks that have mediator for mother?
+    //look for dark quarks that have mediator for mother
     if( (iiid==4900101)) { 
       if(idbg_>0) {
 	std::cout<<" dark quark"<<std::endl;
@@ -249,6 +249,30 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
       } 
       else {
 	std::cout<<" should not be here dark quark with no mother"<<std::endl;
+      }
+    }
+
+    //look for mediators with dark quarks as daughters
+    if( (iiid==4900001)) { 
+      if(idbg_>0) {
+	std::cout<<" dark mediator"<<std::endl;
+      }
+
+      int ndau=igen->numberOfDaughters();
+      if(ndau>0 ) {  // has at least one daughter   
+	for(int jj=0;jj<ndau;jj++) {  // loop over daughters    
+	  if(fabs((igen->daughter(jj))->pdgId())==4900101 ) { // dark quark daughter
+	    if(idbg_>0) std::cout<<"       "
+		     <<std::setw(8)<<std::setprecision(4)<<iid
+		     <<std::setw(8)<<std::setprecision(4)<<ndau
+		     <<std::setw(8)<<std::setprecision(4)<<igen->pt()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->eta()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->phi()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->status()
+	             <<std::endl;
+	    icho=1;
+	  }
+	}
       }
     }
 
