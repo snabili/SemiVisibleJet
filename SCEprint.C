@@ -34,7 +34,8 @@ void SCEprint(){
 
 
   // create a histograms
-  TH1F *hpt   = new TH1F("hpt","dark pion pt distribution",100,0.,500.);
+  TH1F *hptdp   = new TH1F("hptdp","dark pion pt distribution",100,0.,500.);
+  TH1F *hptdq   = new TH1F("hptdq","dark quark pt distribution",100,0.,500.);
 
 
   //read all entries and fill the histograms
@@ -45,16 +46,21 @@ void SCEprint(){
     //genpart variables
     for(Int_t j=0; j<(*genpart_index).size(); j++) {
       cout<<" genpart "<<(*genpart_pt)[j]<<endl;
-      if((*genpart_pid)[j]==4900111){
-	hpt->Fill((*genpart_pt)[j]);
+      if(abs((*genpart_pid)[j])==4900111){
+	hptdp->Fill((*genpart_pt)[j]);
       }
+      if(abs((*genpart_pid)[j])==4900101){
+	hptdq->Fill((*genpart_pt)[j]);
+      }
+
     }
   }
   // We do not close the file. We want to keep the generated
   // histograms we open a browser and the TreeViewer
   if (gROOT->IsBatch()) return;
   TCanvas *c1 = new TCanvas("c1","Vertex Plots",200,10,700,500);
-  hpt->Draw();
+  hptdp->Draw();
+  //hptdq->Draw();
   c1->Modified();
   c1->Update();
   // t1->StartViewer();
