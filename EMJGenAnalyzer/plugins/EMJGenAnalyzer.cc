@@ -252,6 +252,33 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
       }
     }
 
+
+    //look for down quarks that have mediator for mother
+    if( (iiid==1)) { 
+      if(idbg_>0) {
+	std::cout<<" down quark"<<std::endl;
+      }
+
+      int nmoth=igen->numberOfMothers();
+      if(nmoth>0 ) {  // has at least one mother
+	for(int jj=0;jj<nmoth;jj++) {  // loop over mothers
+	  if(abs((igen->mother(jj))->pdgId())==4900001 ) { // mother is mediator
+	    if(idbg_>0) std::cout<<"       "
+		     <<std::setw(8)<<std::setprecision(4)<<iid
+		     <<std::setw(8)<<std::setprecision(4)<<igen->pt()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->eta()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->phi()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->status()
+	             <<std::endl;
+	    icho=1;
+	  }
+	}
+      } 
+      else {
+	std::cout<<" should not be here down quark with no mother"<<std::endl;
+      }
+    }
+
     //look for mediators with dark quarks as daughters
     if( (iiid==4900001)) { 
       if(idbg_>0) {
