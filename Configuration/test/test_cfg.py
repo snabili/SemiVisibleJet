@@ -111,7 +111,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(1)
 process.MessageLogger.cerr.FwkReport.limit = 20
 process.MessageLogger.cerr.default.limit = 100
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source = cms.Source("PoolSource",
     # eventsToProcess = cms.untracked.VEventRange("1:36:3523-1:36:3523"),

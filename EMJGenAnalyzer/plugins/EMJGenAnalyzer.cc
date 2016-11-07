@@ -216,9 +216,9 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}
 	if(icho>0) {
           genpart_.pt=(*igen).pt();
-          genpart_.pt=(*igen).eta();
-          genpart_.pt=(*igen).phi();
-          genpart_.pt=iid;
+          genpart_.eta=(*igen).eta();
+          genpart_.phi=(*igen).phi();
+          genpart_.pid=iid;
           event_.genpart_vector.push_back(genpart_);
           genpart_index_++;
         }
