@@ -193,7 +193,11 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
     genpart_.index = genpart_index_;
     int iid = (*igen).pdgId();
     int iiid=abs(iid);
-    if((iiid==4900111)||(iiid==490013)) { // dark pion or dark rho                                            
+    if((iiid==4900111)||(iiid==4900113)) { // dark pion or dark rho                                            
+      if(idbg_>0) {
+	if(iiid==4900111) std::cout<<"dark pion"<<std::endl;
+	else std::cout<<"dark rho"<<std::endl;
+      }
       int ndau=igen->numberOfDaughters();
       if(ndau>0 ) {  // has at least one daughter                                                             
 	int icho=0;
