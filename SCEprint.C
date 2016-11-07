@@ -65,6 +65,10 @@ void SCEprint(){
   c1->Update();
   // t1->StartViewer();
 
+  TFile myfile("haha.root","RECREATE");
+  hptdp->Write();
+  hptdq->Write();
+
   tt->ResetBranchAddresses();
 
 
