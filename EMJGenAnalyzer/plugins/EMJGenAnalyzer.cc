@@ -188,21 +188,26 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
   // store gen particle information                                     
   iEvent.getByLabel("genParticles", genParticlesH_);                                            
   
+  int icntg=0;
   for (reco::GenParticleCollection::const_iterator  igen = genParticlesH_->begin(); igen != genParticlesH_->end(); igen++) {
     genpart_.Init();
     genpart_.index = genpart_index_;
     int iid = (*igen).pdgId();
     int iiid=abs(iid);
-    if((iiid==4900111)||(iiid==4900113)) { // dark pion or dark rho                                            
+    int icho=0; // see if it is one we want to save
+
+    //look for dark pions or dark rhos that decay to stable particles
+    if( (iiid==4900111)||(iiid==4900113)) { 
       if(idbg_>0) {
 	if(iiid==4900111) std::cout<<"dark pion"<<std::endl;
-	else std::cout<<"dark rho"<<std::endl;
+	else if(iiid==4900113) std::cout<<"dark rho"<<std::endl;
+	else std::cout<<" should not be here"<<std::endl;
       }
+
       int ndau=igen->numberOfDaughters();
-      if(ndau>0 ) {  // has at least one daughter                                                             
-	int icho=0;
-	for(int jj=0;jj<ndau;jj++) {  // loop over daughters                                                  
-	  if((igen->daughter(jj))->status()==1 ) {
+      if(ndau>0 ) {  // has at least one daughter   
+	for(int jj=0;jj<ndau;jj++) {  // loop over daughters    
+	  if((igen->daughter(jj))->status()==1 ) { // stable daughter
 	    if(idbg_>0) std::cout<<"       "
 		     <<std::setw(8)<<std::setprecision(4)<<iid
 		     <<std::setw(8)<<std::setprecision(4)<<ndau
@@ -218,16 +223,46 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	    icho=1;
 	  }
 	}
-	if(icho>0) {
-          genpart_.pt=(*igen).pt();
-          genpart_.eta=(*igen).eta();
-          genpart_.phi=(*igen).phi();
-          genpart_.pid=iid;
-          event_.genpart_vector.push_back(genpart_);
-          genpart_index_++;
-        }
       }
     }
+
+    //look for dark quarks that have mediator for mother?
+    if( (iiid==4900101)) { 
+      if(idbg_>0) {
+	std::cout<<" dark quark"<<std::endl;
+      }
+
+      int nmoth=igen->numberOfMothers();
+      if(nmoth>0 ) {  // has at least one mother
+	for(int jj=0;jj<nmoth;jj++) {  // loop over mothers
+	  if(abs((igen->mother(jj))->pdgId())==4900001 ) { // mother is mediator
+	    if(idbg_>0) std::cout<<"       "
+		     <<std::setw(8)<<std::setprecision(4)<<iid
+		     <<std::setw(8)<<std::setprecision(4)<<igen->pt()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->eta()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->phi()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->status()
+	             <<std::endl;
+	    icho=1;
+	  }
+	}
+      } 
+      else {
+	std::cout<<" should not be here dark quark with no mother"<<std::endl;
+      }
+    }
+
+
+	// write chosen ones to ntuple
+    if(icho>0) {
+      genpart_.pt=(*igen).pt();
+      genpart_.eta=(*igen).eta();
+      genpart_.phi=(*igen).phi();
+      genpart_.pid=iid;
+      event_.genpart_vector.push_back(genpart_);
+      genpart_index_++;
+    }
+    icntg++;
   }
 
 
