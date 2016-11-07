@@ -191,10 +191,42 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
   for (reco::GenParticleCollection::const_iterator  igen = genParticlesH_->begin(); igen != genParticlesH_->end(); igen++) {
     genpart_.Init();
     genpart_.index = genpart_index_;
-    genpart_.pt=(*igen).pt();
-    event_.genpart_vector.push_back(genpart_);
-    genpart_index_++;
+    int iid = (*igen).pdgId();
+    int iiid=abs(iid);
+    if((iiid==4900111)||(iiid==490013)) { // dark pion or dark rho                                            
+      int ndau=igen->numberOfDaughters();
+      if(ndau>0 ) {  // has at least one daughter                                                             
+	int icho=0;
+	for(int jj=0;jj<ndau;jj++) {  // loop over daughters                                                  
+	  if((igen->daughter(jj))->status()==1 ) {
+	    if(idbg_>0) std::cout<<"       "
+		     <<std::setw(8)<<std::setprecision(4)<<iid
+		     <<std::setw(8)<<std::setprecision(4)<<ndau
+		     <<std::setw(8)<<std::setprecision(4)<<igen->pt()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->eta()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->phi()
+		     <<std::setw(8)<<std::setprecision(4)<<igen->status()
+		     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vx()
+		     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vy()
+		     <<std::setw(8)<<std::setprecision(4)<<sqrt( ((igen->daughter(jj))->vx())*((igen->daughter(jj))->vx()) + ((igen->daughter(jj))->vy())*((igen->daughter(jj))->vy()))
+	             <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vz()
+	             <<std::endl;
+	    icho=1;
+	  }
+	}
+	if(icho>0) {
+          genpart_.pt=(*igen).pt();
+          genpart_.pt=(*igen).eta();
+          genpart_.pt=(*igen).phi();
+          genpart_.pt=iid;
+          event_.genpart_vector.push_back(genpart_);
+          genpart_index_++;
+        }
+      }
+    }
   }
+
+
   
 
   // Write current Event to OutputTree                                                                              

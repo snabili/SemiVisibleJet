@@ -22,6 +22,9 @@ namespace EMJGen
     vector<int>             genpart_index               ;
     vector<int>             genpart_source              ;
     vector<float>           genpart_pt                  ;
+    vector<float>           genpart_eta;
+    vector<float>           genpart_phi;
+    vector<int>           genpart_pid;
   };
 }
 
@@ -32,6 +35,9 @@ EMJGen::OutputTree::Init() {
   event               = -1;
   genpart_index               .clear();
   genpart_pt                  .clear();
+  genpart_eta                  .clear();
+  genpart_phi                  .clear();
+  genpart_pid                  .clear();
 }
 
 void
@@ -42,6 +48,9 @@ EMJGen::OutputTree::Branch(TTree* tree) {
   BRANCH(tree, event               );
   BRANCH(tree, genpart_index               );
   BRANCH(tree, genpart_pt                  );
+  BRANCH(tree, genpart_eta                  );
+  BRANCH(tree, genpart_phi                  );
+  BRANCH(tree, genpart_pid                  );
 }
 
 // Insert new empty element in nested vector and returns pointer to the added element

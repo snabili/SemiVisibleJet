@@ -43,9 +43,15 @@ namespace EMJGen
     void Init(){
       index                = DEFAULTVALUE;
       pt                   = DEFAULTVALUE;
+      eta                   = DEFAULTVALUE;
+      phi                   = DEFAULTVALUE;
+      pid                   = DEFAULTVALUE;
     }
     int    index               ;
     float  pt                  ;
+    float  eta                  ;
+    float  phi                  ;
+    int  pid                  ;
   };
 
 // Turn vector of objects, into vector of member variable by calling func(object)
@@ -88,6 +94,9 @@ WriteEventToOutput(const Event& event, EMJGen::OutputTree* otree)
   {
     vectorize<GenPart, int   >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.index               ;}, otree->genpart_index               );
     vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.pt                  ;}, otree->genpart_pt                  );
+    vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.eta                  ;}, otree->genpart_eta                  );
+    vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.phi                  ;}, otree->genpart_phi                  );
+    vectorize<GenPart, int >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.pid                  ;}, otree->genpart_pid                  );
   }
 }
 
