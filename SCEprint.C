@@ -56,7 +56,7 @@ void SCEprint(){
 
   // create a histograms
   TH1F *hptdp   = new TH1F("hptdp","dark pion pt distribution",100,0.,500.);
-  TH1F *hrdecaydp   = new TH1F("hrdecaydp","dark pion pt distribution",100,0.,500.);
+  TH1F *hrdecaydp   = new TH1F("hrdecaydp","dark decay radius distribution",100,0.,500.);
   TH1F *hndaudp = new TH1F("hndaudp"," number dark pion daughters",20,0.,20.);
   TH1F *hndauchdp = new TH1F("hndauchdp"," number charged dark pion daughters",20,0.,20.);
   TH1F *hptdq   = new TH1F("hptdq","dark quark pt distribution",100,0.,500.);
