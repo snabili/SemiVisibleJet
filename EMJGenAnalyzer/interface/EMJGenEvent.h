@@ -48,6 +48,7 @@ namespace EMJGen
       phi                   = DEFAULTVALUE;
       pid                   = DEFAULTVALUE;
       ndau                   = DEFAULTVALUE;
+      ndauch                   = DEFAULTVALUE;
       xdecay                = DEFAULTVALUE;
       ydecay                = DEFAULTVALUE;
       zdecay                = DEFAULTVALUE;
@@ -58,6 +59,7 @@ namespace EMJGen
     float  phi                  ;
     int  pid                  ;
     int  ndau                  ;
+    int  ndauch                  ;
     float  xdecay                  ;
     float  ydecay                  ;
     float  zdecay                  ;
@@ -125,6 +127,7 @@ WriteEventToOutput(const Event& event, EMJGen::OutputTree* otree)
     vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.phi                  ;}, otree->genpart_phi                  );
     vectorize<GenPart, int >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.pid                  ;}, otree->genpart_pid                  );
     vectorize<GenPart, int >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.ndau                  ;}, otree->genpart_ndau                  );
+    vectorize<GenPart, int >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.ndauch                  ;}, otree->genpart_ndauch                  );
     vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.xdecay                  ;}, otree->genpart_xdecay                  );
     vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.ydecay                  ;}, otree->genpart_ydecay                  );
     vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.zdecay                  ;}, otree->genpart_zdecay                  );

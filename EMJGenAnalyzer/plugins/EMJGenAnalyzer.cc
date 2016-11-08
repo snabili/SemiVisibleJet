@@ -204,6 +204,7 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
     float ydecay=0;
     float zdecay=0;
     int ndau=igen->numberOfDaughters();
+    int ndauch=0;
     if(ndau>0) {
       xdecay=(igen->daughter(0))->vx();
       ydecay=(igen->daughter(0))->vy();
@@ -236,6 +237,9 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	             <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vz()
 	             <<std::endl;
 	    icho=1;
+	  }
+	  if((igen->daughter(jj))->charge()!=0 ) { // charged daughter
+	    ndauch+=1;
 	  }
 	}
       }
@@ -326,6 +330,7 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
       genpart_.phi=(*igen).phi();
       genpart_.pid=iid;
       genpart_.ndau=ndau;
+      genpart_.ndauch=ndauch;
       genpart_.xdecay=xdecay;
       genpart_.ydecay=ydecay;
       genpart_.zdecay=zdecay;
