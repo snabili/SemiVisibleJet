@@ -325,6 +325,7 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
       genpart_.eta=(*igen).eta();
       genpart_.phi=(*igen).phi();
       genpart_.pid=iid;
+      genpart_.ndau=ndau;
       genpart_.xdecay=xdecay;
       genpart_.ydecay=ydecay;
       genpart_.zdecay=zdecay;
