@@ -15,8 +15,6 @@ using std::vector;
 
 namespace EMJGen
 {
-  class Track;
-  class Vertex;
   class Jet;
   class GenPart;
   class Event {
@@ -29,13 +27,16 @@ namespace EMJGen
       event                = DEFAULTVALUE;
 
       genpart_vector.clear();
+      jet_vector.clear();
     };
     int    run                 ;
     int    lumi                ;
     int    event               ;
 
     vector<GenPart> genpart_vector;
+    vector<Jet> jet_vector;
   }; 
+
   class GenPart {
   public:
     GenPart(){}
@@ -52,6 +53,23 @@ namespace EMJGen
     float  eta                  ;
     float  phi                  ;
     int  pid                  ;
+  };
+
+
+  class Jet {
+  public:
+    Jet(){}
+    ~Jet(){}
+    void Init(){
+      index                = DEFAULTVALUE;
+      pt                   = DEFAULTVALUE;
+      eta                   = DEFAULTVALUE;
+      phi                   = DEFAULTVALUE;
+    }
+    int    index               ;
+    float  pt                  ;
+    float  eta                  ;
+    float  phi                  ;
   };
 
 // Turn vector of objects, into vector of member variable by calling func(object)
@@ -79,6 +97,7 @@ vectorize_new(const vector<Object>& input, std::function<T (const Object &)> fun
 
 using EMJGen::Event;
 using EMJGen::GenPart;
+ using EMJGen::Jet;
 
 void
 WriteEventToOutput(const Event& event, EMJGen::OutputTree* otree)
@@ -98,6 +117,15 @@ WriteEventToOutput(const Event& event, EMJGen::OutputTree* otree)
     vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.phi                  ;}, otree->genpart_phi                  );
     vectorize<GenPart, int >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.pid                  ;}, otree->genpart_pid                  );
   }
+
+  // jet variables
+  {
+    vectorize<Jet, int   >(event.jet_vector, [](const EMJGen::Jet& obj ){return obj.index               ;}, otree->genjet_index               );
+    vectorize<Jet, float >(event.jet_vector, [](const EMJGen::Jet& obj ){return obj.pt                  ;}, otree->genjet_pt                  );
+    vectorize<Jet, float >(event.jet_vector, [](const EMJGen::Jet& obj ){return obj.eta                  ;}, otree->genjet_eta                  );
+    vectorize<Jet, float >(event.jet_vector, [](const EMJGen::Jet& obj ){return obj.phi                  ;}, otree->genjet_phi                  );
+  }
+
 }
 
 }

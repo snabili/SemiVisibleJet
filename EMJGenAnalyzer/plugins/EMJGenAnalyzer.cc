@@ -116,8 +116,11 @@ class EMJGenAnalyzer : public edm::EDFilter {
     virtual bool filter(edm::Event&, const edm::EventSetup&) override;
     virtual void endJob() override;
 
+    edm::EDGetTokenT< reco::GenJetCollection > jetCollectionToken_;
+
   // ----------member data ---------------------------                                                            
   bool idbg_;
+  float minPt_=20;
 
   edm::Service<TFileService> fs;
 
@@ -127,11 +130,14 @@ class EMJGenAnalyzer : public edm::EDFilter {
   EMJGen :: Event event_; // current event
   EMJGen:: GenPart    genpart_    ; // Current jet
   int genpart_index_    ; // Current jet index  
+  EMJGen:: Jet    jet_    ; // Current jet
+  int jet_index_    ; // Current jet index  
+
 
 
 
   edm::Handle<reco::GenParticleCollection> genParticlesH_;
-  edm::Handle<reco::GenJetCollection> genJets_;
+  edm::Handle<reco::GenJetCollection> genJetsH_;
 
 };
 
@@ -155,7 +161,6 @@ EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
   consumes<reco::GenJetCollection> (edm::InputTag("ak4GenJets"));
 
 
-
 }
 
 
@@ -176,6 +181,7 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
   event_.Init();
   // Reset object counters 
   genpart_index_=0;
+  jet_index_=0;
 
   event_.run   = iEvent.id().run();
   event_.event = iEvent.id().event();
@@ -315,6 +321,33 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
     icntg++;
   }
+
+
+  // store gen jet information
+  iEvent.getByLabel("ak4GenJets", genJetsH_);                                            
+
+  if(idbg_>0) {
+    std::cout<<std::endl;
+    std::cout<<" gen JETS in event"<<std::endl;
+  }
+
+  for (reco::GenJetCollection::const_iterator  igen = genJetsH_->begin(); igen != genJetsH_->end(); igen++) {
+    jet_.Init();
+    jet_.index = jet_index_;
+
+    if ( (*igen).pt() > minPt_ ) {
+      if(idbg_>0) {
+	std::cout<<" jet pT is "<<(*igen).pt()<<std::endl;
+      }
+      jet_.pt=(*igen).pt();
+      jet_.eta=(*igen).eta();
+      jet_.phi=(*igen).phi();
+      event_.jet_vector.push_back(jet_);
+      jet_index_++;
+
+    }
+  }
+
 
 
   

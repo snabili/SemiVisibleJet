@@ -19,12 +19,17 @@ namespace EMJGen
     int                     run                 ;
     int                     lumi                ;
     int                     event               ;
+
     vector<int>             genpart_index               ;
-    vector<int>             genpart_source              ;
     vector<float>           genpart_pt                  ;
     vector<float>           genpart_eta;
     vector<float>           genpart_phi;
     vector<int>           genpart_pid;
+
+    vector<int>             genjet_index               ;
+    vector<float>           genjet_pt                  ;
+    vector<float>           genjet_eta;
+    vector<float>           genjet_phi;
   };
 }
 
@@ -33,11 +38,17 @@ EMJGen::OutputTree::Init() {
   run                 = -1;
   lumi                = -1;
   event               = -1;
+
   genpart_index               .clear();
   genpart_pt                  .clear();
   genpart_eta                  .clear();
   genpart_phi                  .clear();
   genpart_pid                  .clear();
+
+  genjet_index               .clear();
+  genjet_pt                  .clear();
+  genjet_eta                  .clear();
+  genjet_phi                  .clear();
 }
 
 void
@@ -46,11 +57,17 @@ EMJGen::OutputTree::Branch(TTree* tree) {
   BRANCH(tree, run                 );
   BRANCH(tree, lumi                );
   BRANCH(tree, event               );
+
   BRANCH(tree, genpart_index               );
   BRANCH(tree, genpart_pt                  );
   BRANCH(tree, genpart_eta                  );
   BRANCH(tree, genpart_phi                  );
   BRANCH(tree, genpart_pid                  );
+
+  BRANCH(tree, genjet_index               );
+  BRANCH(tree, genjet_pt                  );
+  BRANCH(tree, genjet_eta                  );
+  BRANCH(tree, genjet_phi                  );
 }
 
 // Insert new empty element in nested vector and returns pointer to the added element
