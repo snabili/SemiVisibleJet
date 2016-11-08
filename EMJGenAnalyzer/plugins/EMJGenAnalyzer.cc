@@ -200,6 +200,16 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
     genpart_.index = genpart_index_;
     int iid = (*igen).pdgId();
     int iiid=abs(iid);
+    float xdecay=0;
+    float ydecay=0;
+    float zdecay=0;
+    int ndau=igen->numberOfDaughters();
+    if(ndau>0) {
+      xdecay=(igen->daughter(0))->vx();
+      ydecay=(igen->daughter(0))->vy();
+      zdecay=(igen->daughter(0))->vz();
+    }
+
     int icho=0; // see if it is one we want to save
 
     //look for dark pions or dark rhos that decay to stable particles
@@ -210,7 +220,6 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	else std::cout<<" should not be here"<<std::endl;
       }
 
-      int ndau=igen->numberOfDaughters();
       if(ndau>0 ) {  // has at least one daughter   
 	for(int jj=0;jj<ndau;jj++) {  // loop over daughters    
 	  if((igen->daughter(jj))->status()==1 ) { // stable daughter
@@ -316,6 +325,9 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
       genpart_.eta=(*igen).eta();
       genpart_.phi=(*igen).phi();
       genpart_.pid=iid;
+      genpart_.xdecay=xdecay;
+      genpart_.ydecay=ydecay;
+      genpart_.zdecay=zdecay;
       event_.genpart_vector.push_back(genpart_);
       genpart_index_++;
     }

@@ -47,12 +47,18 @@ namespace EMJGen
       eta                   = DEFAULTVALUE;
       phi                   = DEFAULTVALUE;
       pid                   = DEFAULTVALUE;
+      xdecay                = DEFAULTVALUE;
+      ydecay                = DEFAULTVALUE;
+      zdecay                = DEFAULTVALUE;
     }
     int    index               ;
     float  pt                  ;
     float  eta                  ;
     float  phi                  ;
     int  pid                  ;
+    float  xdecay                  ;
+    float  ydecay                  ;
+    float  zdecay                  ;
   };
 
 
@@ -116,6 +122,10 @@ WriteEventToOutput(const Event& event, EMJGen::OutputTree* otree)
     vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.eta                  ;}, otree->genpart_eta                  );
     vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.phi                  ;}, otree->genpart_phi                  );
     vectorize<GenPart, int >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.pid                  ;}, otree->genpart_pid                  );
+    vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.xdecay                  ;}, otree->genpart_xdecay                  );
+    vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.ydecay                  ;}, otree->genpart_ydecay                  );
+    vectorize<GenPart, float >(event.genpart_vector, [](const EMJGen::GenPart& obj ){return obj.zdecay                  ;}, otree->genpart_zdecay                  );
+
   }
 
   // jet variables

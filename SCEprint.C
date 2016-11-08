@@ -21,6 +21,9 @@ void SCEprint(){
   vector<float> *genpart_eta = new vector<float>;
   vector<float> *genpart_phi = new vector<float>;
   vector<int> *genpart_pid = new vector<int>;
+  vector<float> *genpart_xdecay = new vector<float>;
+  vector<float> *genpart_ydecay = new vector<float>;
+  vector<float> *genpart_zdecay = new vector<float>;
 
   vector<int> *genjet_index=new vector<int>;
   vector<float> *genjet_pt = new vector<float>;
@@ -36,6 +39,10 @@ void SCEprint(){
   tt->SetBranchAddress("genpart_eta",&genpart_eta);
   tt->SetBranchAddress("genpart_phi",&genpart_phi);
   tt->SetBranchAddress("genpart_pid",&genpart_pid);
+  tt->SetBranchAddress("genpart_xdecay",&genpart_xdecay);
+  tt->SetBranchAddress("genpart_ydecay",&genpart_ydecay);
+  tt->SetBranchAddress("genpart_zdecay",&genpart_zdecay);
+
 
   tt->SetBranchAddress("genjet_index",&genjet_index);
   tt->SetBranchAddress("genjet_pt",&genjet_pt);
@@ -45,6 +52,7 @@ void SCEprint(){
 
   // create a histograms
   TH1F *hptdp   = new TH1F("hptdp","dark pion pt distribution",100,0.,500.);
+  TH1F *hrdecaydp   = new TH1F("hrdecaydp","dark pion pt distribution",100,0.,500.);
   TH1F *hptdq   = new TH1F("hptdq","dark quark pt distribution",100,0.,500.);
   TH1F *hptjet   = new TH1F("hptjet","gen jet pt distribution",100,0.,500.);
 
@@ -60,6 +68,9 @@ void SCEprint(){
       cout<<" genpart "<<(*genpart_pt)[j]<<endl;
       if(abs((*genpart_pid)[j])==4900111){
 	hptdp->Fill((*genpart_pt)[j]);
+	float xx =(*genpart_xdecay)[j];
+	float yy =(*genpart_ydecay)[j];
+	hrdecaydp->Fill(xx*xx+yy*yy);
       }
       if(abs((*genpart_pid)[j])==4900101){
 	hptdq->Fill((*genpart_pt)[j]);
@@ -87,8 +98,10 @@ void SCEprint(){
 
   TFile myfile("haha.root","RECREATE");
   hptdp->Write();
+  hrdecaydp->Write();
   hptdq->Write();
   hptjet->Write();
+
 
   tt->ResetBranchAddresses();
 

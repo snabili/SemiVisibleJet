@@ -25,6 +25,9 @@ namespace EMJGen
     vector<float>           genpart_eta;
     vector<float>           genpart_phi;
     vector<int>           genpart_pid;
+    vector<float>           genpart_xdecay;
+    vector<float>           genpart_ydecay;
+    vector<float>           genpart_zdecay;
 
     vector<int>             genjet_index               ;
     vector<float>           genjet_pt                  ;
@@ -44,6 +47,9 @@ EMJGen::OutputTree::Init() {
   genpart_eta                  .clear();
   genpart_phi                  .clear();
   genpart_pid                  .clear();
+  genpart_xdecay                  .clear();
+  genpart_ydecay                  .clear();
+  genpart_zdecay                  .clear();
 
   genjet_index               .clear();
   genjet_pt                  .clear();
@@ -63,6 +69,9 @@ EMJGen::OutputTree::Branch(TTree* tree) {
   BRANCH(tree, genpart_eta                  );
   BRANCH(tree, genpart_phi                  );
   BRANCH(tree, genpart_pid                  );
+  BRANCH(tree, genpart_xdecay                  );
+  BRANCH(tree, genpart_ydecay                  );
+  BRANCH(tree, genpart_zdecay                  );
 
   BRANCH(tree, genjet_index               );
   BRANCH(tree, genjet_pt                  );
