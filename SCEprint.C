@@ -22,20 +22,31 @@ void SCEprint(){
   vector<float> *genpart_phi = new vector<float>;
   vector<int> *genpart_pid = new vector<int>;
 
+  vector<int> *genjet_index=new vector<int>;
+  vector<float> *genjet_pt = new vector<float>;
+  vector<float> *genjet_eta = new vector<float>;
+  vector<float> *genjet_phi = new vector<float>;
 
 
 
   tt->SetBranchAddress("event",&event);
+
   tt->SetBranchAddress("genpart_index",&genpart_index);
   tt->SetBranchAddress("genpart_pt",&genpart_pt);
   tt->SetBranchAddress("genpart_eta",&genpart_eta);
   tt->SetBranchAddress("genpart_phi",&genpart_phi);
   tt->SetBranchAddress("genpart_pid",&genpart_pid);
 
+  tt->SetBranchAddress("genjet_index",&genjet_index);
+  tt->SetBranchAddress("genjet_pt",&genjet_pt);
+  tt->SetBranchAddress("genjet_eta",&genjet_eta);
+  tt->SetBranchAddress("genjet_phi",&genjet_phi);
+
 
   // create a histograms
   TH1F *hptdp   = new TH1F("hptdp","dark pion pt distribution",100,0.,500.);
   TH1F *hptdq   = new TH1F("hptdq","dark quark pt distribution",100,0.,500.);
+  TH1F *hptjet   = new TH1F("hptjet","gen jet pt distribution",100,0.,500.);
 
 
   //read all entries and fill the histograms
@@ -43,7 +54,8 @@ void SCEprint(){
   for (Int_t i=0; i<nentries; i++) {
     tt->GetEntry(i);
     cout<<"event number is "<<event<<endl;
-    //genpart variables
+
+    //gen particles variables
     for(Int_t j=0; j<(*genpart_index).size(); j++) {
       cout<<" genpart "<<(*genpart_pt)[j]<<endl;
       if(abs((*genpart_pid)[j])==4900111){
@@ -54,6 +66,14 @@ void SCEprint(){
       }
 
     }
+
+    // gen jets
+    for(Int_t j=0; j<(*genjet_index).size(); j++) {
+      cout<<" genjet "<<(*genjet_pt)[j]<<endl;
+      hptjet->Fill((*genjet_pt)[j]);
+    }
+
+
   }
   // We do not close the file. We want to keep the generated
   // histograms we open a browser and the TreeViewer
@@ -68,6 +88,7 @@ void SCEprint(){
   TFile myfile("haha.root","RECREATE");
   hptdp->Write();
   hptdq->Write();
+  hptjet->Write();
 
   tt->ResetBranchAddresses();
 
