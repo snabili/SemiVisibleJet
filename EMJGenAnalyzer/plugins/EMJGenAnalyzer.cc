@@ -118,6 +118,10 @@ class EMJGenAnalyzer : public edm::EDFilter {
 
     edm::EDGetTokenT< reco::GenJetCollection > jetCollectionToken_;
 
+  //computation functions
+  double compute_impact(double pt, double phi, double charge, double vx, double vy ) const;
+
+
   // ----------member data ---------------------------                                                            
   bool idbg_;
   float minPt_=20;
@@ -132,6 +136,8 @@ class EMJGenAnalyzer : public edm::EDFilter {
   int genpart_index_    ; // Current jet index  
   EMJGen:: Jet    jet_    ; // Current jet
   int jet_index_    ; // Current jet index  
+  EMJGen::Track track_; // current track
+  int track_index_; //current track index
 
 
 
@@ -182,6 +188,7 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
   // Reset object counters 
   genpart_index_=0;
   jet_index_=0;
+  track_index_=0;
 
   event_.run   = iEvent.id().run();
   event_.event = iEvent.id().event();
@@ -237,9 +244,9 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	             <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vz()
 	             <<std::endl;
 	    icho=1;
-	  }
-	  if((igen->daughter(jj))->charge()!=0 ) { // charged daughter
-	    ndauch+=1;
+	    if((igen->daughter(jj))->charge()!=0 ) { // charged stable daughter
+	      ndauch+=1;
+	    }
 	  }
 	}
       }
@@ -334,9 +341,31 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
       genpart_.xdecay=xdecay;
       genpart_.ydecay=ydecay;
       genpart_.zdecay=zdecay;
+ 
+    //add stable charged daughters
+      if(ndau>0 ) {  // has at least one daughter   
+	if(idbg_>0) std::cout<<" preparing stable daughters "<<ndauch<<std::endl;
+	for(int jj=0;jj<ndau;jj++) {  // loop over daughters    
+	  if((igen->daughter(jj))->status()==1 ) { // stable daughter
+	    if((igen->daughter(jj))->charge()!=0 ) { // charged daughter
+	      if(idbg_>0) {
+		std::cout<<"adding daughter with pt of "<<(igen->daughter(jj))->pt()<<std::endl;
+	      }
+	      track_.Init();
+	      track_.index=track_index_;
+	      track_.genpart_index = genpart_index_;
+	      track_.pt = (igen->daughter(jj))->pt();
+	      genpart_.track_vector.push_back(track_);
+	      track_index_++;
+	    }
+	  }
+        }
+      }
       event_.genpart_vector.push_back(genpart_);
       genpart_index_++;
     }
+
+
     icntg++;
   }
 
@@ -404,7 +433,38 @@ void EMJGenAnalyzer::fillDescriptions(edm::ConfigurationDescriptions& descriptio
   descriptions.addDefault(desc);
 }
 
+double EMJGenAnalyzer::compute_impact(double pt, double phi, double charge, double vx, double vy ) const {
+  double imp=0.;
 
+  double Bmag=3.8;
+  // calculate radius of curvature in cm                             
+  float Rg=100*pt/0.3/Bmag;
+
+  // calculate x and y at center of circle                           
+
+  float xcenterg = -(vx+charge*Rg*sin(phi));
+  float ycenterg = -(vy-charge*Rg*cos(phi));
+  float rgen=sqrt(vx*vx+vy*vy);
+
+  if(idbg_>0) std::cout<<" center gen is "<<xcenterg<<" "<<ycenterg<<" rad gen is "<<rgen<<std::endl;
+
+  // calculate phi at distance of closest approach                   
+  float phig=0.;
+  if(charge<0) {
+    phig = atan2(xcenterg,-ycenterg);
+  } else {
+    phig = atan2(-xcenterg,ycenterg);
+  }
+  if(idbg_>99) std::cout<<phig<<std::endl;
+  // calculate impact parameter                                      
+  float dxyg=sqrt(pow(xcenterg,2)+pow(ycenterg,2))-Rg;
+  if(charge>0) dxyg=-1.*dxyg;
+
+  imp=dxyg;
+
+
+  return imp;
+}
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(EMJGenAnalyzer);

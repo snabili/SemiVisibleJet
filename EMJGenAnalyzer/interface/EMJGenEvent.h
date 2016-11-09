@@ -15,6 +15,7 @@ using std::vector;
 
 namespace EMJGen
 {
+  class Track;
   class Jet;
   class GenPart;
   class Event {
@@ -33,9 +34,31 @@ namespace EMJGen
     int    lumi                ;
     int    event               ;
 
+
     vector<GenPart> genpart_vector;
     vector<Jet> jet_vector;
   }; 
+
+  class Track {
+  public:
+    Track(){}
+    ~Track(){}
+    void Init(){
+      index                = DEFAULTVALUE;
+      genpart_index = DEFAULTVALUE;
+      pt                   = DEFAULTVALUE;
+      eta                   = DEFAULTVALUE;
+      phi                   = DEFAULTVALUE;
+      impact                = DEFAULTVALUE;
+    }
+    int    index               ;
+    int genpart_index;
+    float  pt                  ;
+    float  eta                  ;
+    float  phi                  ;
+    float  impact                  ;
+  };
+
 
   class GenPart {
   public:
@@ -52,6 +75,8 @@ namespace EMJGen
       xdecay                = DEFAULTVALUE;
       ydecay                = DEFAULTVALUE;
       zdecay                = DEFAULTVALUE;
+
+      track_vector.clear();
     }
     int    index               ;
     float  pt                  ;
@@ -63,6 +88,8 @@ namespace EMJGen
     float  xdecay                  ;
     float  ydecay                  ;
     float  zdecay                  ;
+
+    vector<Track> track_vector;
   };
 
 
@@ -105,6 +132,7 @@ vectorize_new(const vector<Object>& input, std::function<T (const Object &)> fun
   return output;
 }
 
+using EMJGen::Track;
 using EMJGen::Event;
 using EMJGen::GenPart;
  using EMJGen::Jet;
@@ -141,6 +169,20 @@ WriteEventToOutput(const Event& event, EMJGen::OutputTree* otree)
     vectorize<Jet, float >(event.jet_vector, [](const EMJGen::Jet& obj ){return obj.eta                  ;}, otree->genjet_eta                  );
     vectorize<Jet, float >(event.jet_vector, [](const EMJGen::Jet& obj ){return obj.phi                  ;}, otree->genjet_phi                  );
   }
+
+  // for stable daughters of gen particles
+  {
+    for (const auto genpart : event.genpart_vector) {
+      auto index = vectorize_new<Track, int   >(genpart.track_vector, [](const Track& obj ){return obj.index;}); otree->track_index.push_back(index);
+      auto genpart_index = vectorize_new<Track, int   >(genpart.track_vector, [](const Track& obj ){return obj.genpart_index;}); otree->track_genpart_index.push_back(genpart_index);
+      auto pt = vectorize_new<Track, float   >(genpart.track_vector, [](const Track& obj ){return obj.pt;}); otree->track_pt.push_back(pt);
+      auto eta = vectorize_new<Track, float   >(genpart.track_vector, [](const Track& obj ){return obj.eta;}); otree->track_eta.push_back(eta);
+      auto phi = vectorize_new<Track, float   >(genpart.track_vector, [](const Track& obj ){return obj.phi;}); otree->track_phi.push_back(phi);
+      auto impact = vectorize_new<Track, float   >(genpart.track_vector, [](const Track& obj ){return obj.impact;}); otree->track_impact.push_back(impact);
+    }
+  }
+
+
 
 }
 

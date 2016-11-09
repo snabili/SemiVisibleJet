@@ -30,6 +30,13 @@ namespace EMJGen
     vector<float>           genpart_xdecay;
     vector<float>           genpart_ydecay;
     vector<float>           genpart_zdecay;
+    //for dark pions include list of charged decay tracks
+    vector<vector<int>> track_index;
+    vector<vector<int>> track_genpart_index;
+    vector<vector<float>> track_pt;
+    vector<vector<float>> track_eta;
+    vector<vector<float>> track_phi;
+    vector<vector<float>> track_impact;
 
     vector<int>             genjet_index               ;
     vector<float>           genjet_pt                  ;
@@ -54,6 +61,12 @@ EMJGen::OutputTree::Init() {
   genpart_xdecay                  .clear();
   genpart_ydecay                  .clear();
   genpart_zdecay                  .clear();
+  track_index.clear();
+  track_genpart_index.clear();
+  track_pt.clear();
+  track_eta.clear();
+  track_phi.clear();
+  track_impact.clear();
 
   genjet_index               .clear();
   genjet_pt                  .clear();
@@ -78,6 +91,12 @@ EMJGen::OutputTree::Branch(TTree* tree) {
   BRANCH(tree, genpart_xdecay                  );
   BRANCH(tree, genpart_ydecay                  );
   BRANCH(tree, genpart_zdecay                  );
+  BRANCH(tree, track_index);
+  BRANCH(tree, track_genpart_index);
+  BRANCH(tree, track_pt);
+  BRANCH(tree, track_eta);
+  BRANCH(tree, track_phi);
+  BRANCH(tree, track_impact);
 
   BRANCH(tree, genjet_index               );
   BRANCH(tree, genjet_pt                  );

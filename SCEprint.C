@@ -27,6 +27,15 @@ void SCEprint(){
   vector<float> *genpart_ydecay = new vector<float>;
   vector<float> *genpart_zdecay = new vector<float>;
 
+  vector<vector<float> > *track_pt = 0;
+  vector<vector<float> > *track_eta = 0;
+  vector<vector<float> > *track_phi = 0;
+  vector<vector<float> > *track_impact = 0;
+  vector<vector<int> > *track_index = 0;
+  vector<vector<int> > *track_genpart_index = 0;
+
+
+
   vector<int> *genjet_index=new vector<int>;
   vector<float> *genjet_pt = new vector<float>;
   vector<float> *genjet_eta = new vector<float>;
@@ -46,6 +55,13 @@ void SCEprint(){
   tt->SetBranchAddress("genpart_xdecay",&genpart_xdecay);
   tt->SetBranchAddress("genpart_ydecay",&genpart_ydecay);
   tt->SetBranchAddress("genpart_zdecay",&genpart_zdecay);
+
+  tt->SetBranchAddress("track_pt",&track_pt);
+  tt->SetBranchAddress("track_eta",&track_eta);
+  tt->SetBranchAddress("track_phi",&track_phi);
+  tt->SetBranchAddress("track_impact",&track_impact);
+  tt->SetBranchAddress("track_index",&track_index);
+  tt->SetBranchAddress("track_genpart_index",&track_genpart_index);
 
 
   tt->SetBranchAddress("genjet_index",&genjet_index);
@@ -72,15 +88,34 @@ void SCEprint(){
     //gen particles variables
     for(Int_t j=0; j<(*genpart_index).size(); j++) {
       cout<<" genpart "<<(*genpart_pt)[j]<<endl;
-      if(abs((*genpart_pid)[j])==4900111){
+      if(abs((*genpart_pid)[j])==4900111){ // dark pion
 	hptdp->Fill((*genpart_pt)[j]);
 	float xx =(*genpart_xdecay)[j];
 	float yy =(*genpart_ydecay)[j];
 	hrdecaydp->Fill(xx*xx+yy*yy);
 	hndaudp->Fill((*genpart_ndau)[j]);
 	hndauchdp->Fill((*genpart_ndauch)[j]);
+
+	vector<float> track_pts = track_pt->at(j);
+	vector<float> track_etas = track_eta->at(j);
+	vector<int> track_indexs = track_index->at(j);
+	vector<int> track_genpart_indexs = track_genpart_index->at(j);
+
+	cout<<" number charged daughter is "<<(*genpart_ndauch)[j]<<endl;
+	cout<<" tracks size is "<<track_pts.size()<<endl;
+	cout<< "pT         eta      "<<endl;
+	for (unsigned itrack=0; itrack<track_pts.size(); itrack++) {
+          cout
+          <<setw(8)<<setprecision(3)<< track_pts[itrack]<<" "
+          <<setw(8)<<setprecision(3)<< track_etas[itrack]<<" "
+          <<setw(8)<< track_indexs[itrack]<<" "
+	  <<endl;
+	}
+
+
+
       }
-      if(abs((*genpart_pid)[j])==4900101){
+      if(abs((*genpart_pid)[j])==4900101){  // dark quark
 	hptdq->Fill((*genpart_pt)[j]);
       }
 
