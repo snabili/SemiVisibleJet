@@ -355,6 +355,9 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	      track_.index=track_index_;
 	      track_.genpart_index = genpart_index_;
 	      track_.pt = (igen->daughter(jj))->pt();
+	      track_.eta = (igen->daughter(jj))->eta();
+	      track_.phi = (igen->daughter(jj))->phi();
+	      track_.impact = compute_impact((igen->daughter(jj))->pt(),(igen->daughter(jj))->phi(),(igen->daughter(jj))->charge(),xdecay,ydecay);
 	      genpart_.track_vector.push_back(track_);
 	      track_index_++;
 	    }
