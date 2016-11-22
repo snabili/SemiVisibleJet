@@ -41,7 +41,7 @@ def addAnalyze(process, isData=False, sample=''):
 
     process.GenAnalyzer = cms.EDFilter('EMJGenAnalyzer',
         srcJets = cms.InputTag("jetFilter", "selectedJets"),
-        idbg = cms.untracked.int32(1),
+        idbg = cms.untracked.int32(100),
     )
 
     # return cms.Sequence(process.emergingJetAnalyzer+process.emJetAnalyzer)

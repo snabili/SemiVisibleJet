@@ -116,8 +116,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.source = cms.Source("PoolSource",
     # eventsToProcess = cms.untracked.VEventRange("1:36:3523-1:36:3523"),
     fileNames = cms.untracked.vstring(
-        '/store/group/phys_exotica/EmergingJets/EmergingJets_ModelB_TuneCUETP8M1_13TeV_pythia8Mod/AODSIM-v1/160202\
-_073524/0000/aodsim_106.root'
+        '/store/user/yoshin/EmJetMC/GENSIM/EmergingJets_mass_X_d_400_mass_pi_d_10_tau_pi_d_150_TuneCUETP8M1_13TeV_pythia8Mod/mass_X_d_400_mass_pi_d_10_tau_pi_d_150/160827_155120/0000/output_1.root'
+        #'/store/group/phys_exotica/EmergingJets/EmergingJets_ModelB_TuneCUETP8M1_13TeV_pythia8Mod/AODSIM-v1/160202_073524/0000/aodsim_106.root'
         #'file:/data/users/eno/emergingJets/2016-09-11.root'
     ),
 )

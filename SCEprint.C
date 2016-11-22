@@ -73,8 +73,9 @@ void SCEprint(){
   // create a histograms
   TH1F *hptdp   = new TH1F("hptdp","dark pion pt distribution",100,0.,500.);
   TH1F *hptchdau = new TH1F("hptchdau","pt of charged daughters of dark pions",100,0.,50.);
-  TH1F *himp = new TH1F("himp","impact parameter charged daughter of dark pions",100,-10.,10.);
-  TH1F *hrdecaydp   = new TH1F("hrdecaydp","dark decay radius distribution",100,0.,500.);
+  TH1F *himp = new TH1F("himp","impact parameter charged daughter of dark pions",100,-200.,200.);
+  TH2F *himp2 = new TH2F("himp2","impact parameter charged daughter of dark pions versus r of decay",10000,0.,5000.,500,-200.,200.);
+  TH1F *hrdecaydp   = new TH1F("hrdecaydp","dark decay radius distribution",100,0.,5000.);
   TH1F *hndaudp = new TH1F("hndaudp"," number dark pion daughters",20,0.,20.);
   TH1F *hndauchdp = new TH1F("hndauchdp"," number charged dark pion daughters",20,0.,20.);
   TH1F *hptdq   = new TH1F("hptdq","dark quark pt distribution",100,0.,500.);
@@ -116,6 +117,7 @@ void SCEprint(){
 	  <<endl;
 	  hptchdau->Fill(track_pts[itrack]);
 	  himp->Fill(track_impacts[itrack]);
+	  himp2->Fill(xx*xx+yy*yy,track_impacts[itrack]);
 	}
 
 
@@ -148,6 +150,7 @@ void SCEprint(){
   TFile myfile("haha.root","RECREATE");
   hptdp->Write();
   himp->Write();
+  himp2->Write();
   hptchdau->Write();
   hrdecaydp->Write();
   hndaudp->Write();

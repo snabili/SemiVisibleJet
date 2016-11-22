@@ -123,7 +123,7 @@ class EMJGenAnalyzer : public edm::EDFilter {
 
 
   // ----------member data ---------------------------                                                            
-  bool idbg_;
+  int idbg_;
   float minPt_=20;
 
   edm::Service<TFileService> fs;
@@ -159,7 +159,9 @@ EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
     otree_.Branch(tree_);
   }
 
-  idbg_ = iConfig.getUntrackedParameter<int>("idbg");
+  //  idbg_ = iConfig.getUntrackedParameter<int>("idbg");
+  idbg_=0;
+  std::cout<<"idbg_ is "<<idbg_<<std::endl;
 
   //  edm::ConsumesCollector iC = consumesCollector();
   consumes<std::vector<reco::GenMET> > (edm::InputTag("genMetTrue"));
@@ -232,17 +234,17 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	for(int jj=0;jj<ndau;jj++) {  // loop over daughters    
 	  if((igen->daughter(jj))->status()==1 ) { // stable daughter
 	    if(idbg_>0) std::cout<<"       "
-		     <<std::setw(8)<<std::setprecision(4)<<iid
-		     <<std::setw(8)<<std::setprecision(4)<<ndau
-		     <<std::setw(8)<<std::setprecision(4)<<igen->pt()
-		     <<std::setw(8)<<std::setprecision(4)<<igen->eta()
-		     <<std::setw(8)<<std::setprecision(4)<<igen->phi()
-		     <<std::setw(8)<<std::setprecision(4)<<igen->status()
-		     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vx()
-		     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vy()
-		     <<std::setw(8)<<std::setprecision(4)<<sqrt( ((igen->daughter(jj))->vx())*((igen->daughter(jj))->vx()) + ((igen->daughter(jj))->vy())*((igen->daughter(jj))->vy()))
-	             <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vz()
-	             <<std::endl;
+	     <<std::setw(8)<<std::setprecision(4)<<iid
+	     <<std::setw(8)<<std::setprecision(4)<<ndau
+	     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->pt()
+	     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->eta()
+	     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->phi()
+	     <<std::setw(8)<<std::setprecision(4)<<igen->status()
+	     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vx()
+	     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vy()
+	     <<std::setw(8)<<std::setprecision(4)<<sqrt( ((igen->daughter(jj))->vx())*((igen->daughter(jj))->vx()) + ((igen->daughter(jj))->vy())*((igen->daughter(jj))->vy()))
+	      <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->vz()
+	      <<std::endl;
 	    icho=1;
 	    if((igen->daughter(jj))->charge()!=0 ) { // charged stable daughter
 	      ndauch+=1;
@@ -438,10 +440,12 @@ void EMJGenAnalyzer::fillDescriptions(edm::ConfigurationDescriptions& descriptio
 
 double EMJGenAnalyzer::compute_impact(double pt, double phi, double charge, double vx, double vy ) const {
   double imp=0.;
+  if(idbg_>99) std::cout<<" pt phi charge vx vy are"<<" "<<pt<<" "<<(180./3.1415)*phi<<" "<<charge<<" "<<vx<<" "<<vy<<std::endl;
 
   double Bmag=3.8;
   // calculate radius of curvature in cm                             
-  float Rg=100*pt/0.3/Bmag;
+  float Rg=100.*pt/0.3/Bmag;
+  if(idbg_>99) std::cout<<"radius is "<<Rg<<std::endl;
 
   // calculate x and y at center of circle                           
 
@@ -449,7 +453,9 @@ double EMJGenAnalyzer::compute_impact(double pt, double phi, double charge, doub
   float ycenterg = -(vy-charge*Rg*cos(phi));
   float rgen=sqrt(vx*vx+vy*vy);
 
-  if(idbg_>0) std::cout<<" center gen is "<<xcenterg<<" "<<ycenterg<<" rad gen is "<<rgen<<std::endl;
+
+
+  if(idbg_>99) std::cout<<" center gen is "<<xcenterg<<" "<<ycenterg<<" rad gen is "<<rgen<<std::endl;
 
   // calculate phi at distance of closest approach                   
   float phig=0.;
@@ -458,13 +464,14 @@ double EMJGenAnalyzer::compute_impact(double pt, double phi, double charge, doub
   } else {
     phig = atan2(-xcenterg,ycenterg);
   }
-  if(idbg_>99) std::cout<<phig<<std::endl;
+  if(idbg_>99) std::cout<<"phi gen is "<<(180./3.1415)*phig<<std::endl;
   // calculate impact parameter                                      
   float dxyg=sqrt(pow(xcenterg,2)+pow(ycenterg,2))-Rg;
   if(charge>0) dxyg=-1.*dxyg;
 
   imp=dxyg;
 
+  if(idbg_>99) std::cout<<"impact is "<<imp<<std::endl;
 
   return imp;
 }
