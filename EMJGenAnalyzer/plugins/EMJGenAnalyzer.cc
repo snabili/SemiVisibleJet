@@ -541,6 +541,9 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
   }
 
   histoMap1D_["test"]->LabelsDeflate();
+  histoMap1D_["test"]->LabelsOption("v");
+  histoMap1D_["test"]->LabelsOption("a");
+  
 
   // store gen jet information
   iEvent.getByLabel("ak4GenJets", genJetsH_);                                            
