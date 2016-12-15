@@ -1,4 +1,3 @@
-// -*- C++ -*-
 //
 // Package:    EmergingJetGenAnalysis/EMJGenAnalyzer
 // Class:      EMJGenAnalyzer
@@ -98,6 +97,31 @@
 #include "EmergingJetGenAnalysis/EMJGenAnalyzer/interface/EMJGenEvent.h"
 
 
+  const int npart=20;
+  const char *partNames[npart] = {
+    "pi0",
+    "rho0",
+    "pi+-",
+    "rho+-",
+    "eta",
+    "omega",
+    "K0",
+    "K*"
+    "K+-",
+    "K*+-",
+    "etaprime",
+    "phi",
+    "Delta-",
+    "n",
+    "Delta0",
+    "p",
+    "Delta+",
+    "Delta++",
+    "Sigma-",
+    "Lambda"
+  };
+
+
 //
 // class declaration
 //
@@ -126,10 +150,21 @@ class EMJGenAnalyzer : public edm::EDFilter {
   int idbg_;
   float minPt_=20;
 
-  edm::Service<TFileService> fs;
+  std::unordered_map<std::string, TH1*> histoMap1D_;
+  std::unordered_map<int,std::string> pdgName;
+  std::unordered_map<int,std::string> darkName;
+  std::unordered_map<int,int> pdgNum;
+
+
 
   EMJGen::OutputTree otree_ ; // OutputTree object        
   TTree* tree_;
+
+
+  edm::Service<TFileService> fs;
+  std::string namea;
+
+
 
   EMJGen :: Event event_; // current event
   EMJGen:: GenPart    genpart_    ; // Current jet
@@ -153,14 +188,84 @@ class EMJGenAnalyzer : public edm::EDFilter {
 //
 EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
   {
-    // Initialize tree                                                                                             
+
+    darkName.emplace(4900111,"dark pion");
+    darkName.emplace(4900113,"dark rho");
+    darkName.emplace(4900101,"dark quark");
+    darkName.emplace(4900001,"dark mediator");
+
+    pdgName.emplace(111,"pi0");
+    pdgName.emplace(113,"rho0");
+    pdgName.emplace(211,"pi+-");
+    pdgName.emplace(213,"rho+-");
+    pdgName.emplace(221,"eta");
+    pdgName.emplace(223,"omega");
+    pdgName.emplace(311,"K0");
+    pdgName.emplace(313,"K*");
+    pdgName.emplace(321,"K+-");
+    pdgName.emplace(323,"K*+-");
+    pdgName.emplace(331,"etaprime");
+    pdgName.emplace(333,"phi");
+    pdgName.emplace(1114,"Delta-");
+    pdgName.emplace(2112,"n");
+    pdgName.emplace(2114,"Delta0");
+    pdgName.emplace(2212,"p");
+    pdgName.emplace(2214,"Delta+");
+    pdgName.emplace(2224,"Delta++");
+    pdgName.emplace(3112,"Sigma-");
+    pdgName.emplace(3122,"Lambda");
+
+    pdgNum.emplace(111,0);
+    pdgNum.emplace(113,1);
+    pdgNum.emplace(211,2);
+    pdgNum.emplace(213,3);
+    pdgNum.emplace(221,4);
+    pdgNum.emplace(223,5);
+    pdgNum.emplace(311,6);
+    pdgNum.emplace(313,7);
+    pdgNum.emplace(321,8);
+    pdgNum.emplace(323,9);
+    pdgNum.emplace(331,10);
+    pdgNum.emplace(333,11);
+    pdgNum.emplace(1114,12);
+    pdgNum.emplace(2112,13);
+    pdgNum.emplace(2114,14);
+    pdgNum.emplace(2212,15);
+    pdgNum.emplace(2214,16);
+    pdgNum.emplace(2224,17);
+    pdgNum.emplace(3112,18);
+    pdgNum.emplace(3122,19);
+
+
+
+
+
+
+    // Initialize tree                                                                             
+  namea="darkpionmass"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 100 , 0., 50.) );
+  namea="darkdaughters"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 2000 , 0., 2000.) );
+  namea="test"  ; histoMap1D_.emplace( namea , fs->make<TH1F>(namea.c_str() , namea.c_str(), 3,0,3) );
+
+
+
+
+  for ( auto const & it : histoMap1D_ ) {
+    if(it.first!="test") {
+      it.second->Sumw2();
+    } else {
+      it.second->SetStats(0);
+      it.second->SetCanExtend(TH1::kAllAxes);
+    }
+  }
+
+                
     std::string modulename = iConfig.getParameter<std::string>("@module_label");
     tree_           = fs->make<TTree>("emJetTree","emJetTree");
     otree_.Branch(tree_);
   }
 
   //  idbg_ = iConfig.getUntrackedParameter<int>("idbg");
-  idbg_=0;
+  idbg_=10;
   std::cout<<"idbg_ is "<<idbg_<<std::endl;
 
   //  edm::ConsumesCollector iC = consumesCollector();
@@ -224,8 +329,15 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     //look for dark pions or dark rhos that decay to stable particles
     if( (iiid==4900111)||(iiid==4900113)) { 
+	if(iiid==4900111) {
+	  histoMap1D_["darkpionmass"]->Fill((*igen).mass());
+	}
+
+
       if(idbg_>0) {
-	if(iiid==4900111) std::cout<<"dark pion"<<std::endl;
+	if(iiid==4900111) {
+	  std::cout<<"dark pion"<<std::endl;
+	}
 	else if(iiid==4900113) std::cout<<"dark rho"<<std::endl;
 	else std::cout<<" should not be here"<<std::endl;
       }
@@ -345,14 +457,34 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
       genpart_.zdecay=zdecay;
  
     //add stable charged daughters
+      int aiiid;
       if(ndau>0 ) {  // has at least one daughter   
-	if(idbg_>0) std::cout<<" preparing stable daughters "<<ndauch<<std::endl;
+	if(idbg_>0) {
+	  std::cout<<std::endl;
+	  std::cout<<" preparing stable daughters "<<ndauch<<std::endl;
+	  std::cout<<" for a "<<darkName[iiid]<<std::endl;
+	  std::cout<<" id  pt  charge stable? name "<<std::endl;
+	}
 	for(int jj=0;jj<ndau;jj++) {  // loop over daughters    
+	  aiiid=abs((igen->daughter(jj))->pdgId());
+
+	  // histogram for dark pions of daughter ids if has at least one stable daughter
+	  if(iiid==4900111) {
+	    histoMap1D_["darkdaughters"]->Fill(aiiid);
+	    histoMap1D_["test"]->Fill(partNames[pdgNum[aiiid]],1);
+	  }
+	  if(idbg_>0) {
+	    std::cout
+  	     <<std::setw(8)<<std::setprecision(4)<<aiiid
+  	     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->pt()
+  	     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->charge()
+  	     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->status()
+	     <<" "<<pdgName[aiiid]
+	     <<std::endl;
+	      }
+
 	  if((igen->daughter(jj))->status()==1 ) { // stable daughter
 	    if((igen->daughter(jj))->charge()!=0 ) { // charged daughter
-	      if(idbg_>0) {
-		std::cout<<"adding daughter with pt of "<<(igen->daughter(jj))->pt()<<std::endl;
-	      }
 	      track_.Init();
 	      track_.index=track_index_;
 	      track_.genpart_index = genpart_index_;
@@ -374,6 +506,7 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
     icntg++;
   }
 
+  histoMap1D_["test"]->LabelsDeflate();
 
   // store gen jet information
   iEvent.getByLabel("ak4GenJets", genJetsH_);                                            
