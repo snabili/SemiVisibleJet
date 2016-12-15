@@ -97,7 +97,7 @@
 #include "EmergingJetGenAnalysis/EMJGenAnalyzer/interface/EMJGenEvent.h"
 
 
-  const int npart=20;
+  const int npart=21;
   const char *partNames[npart] = {
     "pi0",
     "rho0",
@@ -118,7 +118,8 @@
     "Delta+",
     "Delta++",
     "Sigma-",
-    "Lambda"
+    "Lambda",
+    "unknown"
   };
 
 
@@ -236,6 +237,14 @@ EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
     pdgNum.emplace(3112,18);
     pdgNum.emplace(3122,19);
 
+    std::unordered_map<int,std::string>::iterator got;
+    std::unordered_map<int,int>::iterator got2;
+    for(int hh=0;hh<10000000;hh++) {
+      got = pdgName.find(hh);
+      if(got == pdgName.end()) pdgName.emplace(hh,"unknown");
+      got2 = pdgNum.find(hh);
+      if(got2 == pdgNum.end()) pdgNum.emplace(hh,20);
+    }
 
 
 
