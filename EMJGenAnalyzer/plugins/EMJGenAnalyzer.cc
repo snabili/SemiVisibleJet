@@ -97,7 +97,7 @@
 #include "EmergingJetGenAnalysis/EMJGenAnalyzer/interface/EMJGenEvent.h"
 
 
-  const int npart=21;
+  const int npart=26;
   const char *partNames[npart] = {
     "pi0",
     "rho0",
@@ -118,7 +118,12 @@
     "Delta+",
     "Delta++",
     "Sigma-",
+    "Sigma*-",
     "Lambda",
+    "Sigma0",
+    "Sigma*0",
+    "Sigma+",
+    "Omega*0",
     "unknown"
   };
 
@@ -150,6 +155,7 @@ class EMJGenAnalyzer : public edm::EDFilter {
   // ----------member data ---------------------------                                                            
   int idbg_;
   float minPt_=20;
+  int icnt_=0;
 
   std::unordered_map<std::string, TH1*> histoMap1D_;
   std::unordered_map<int,std::string> pdgName;
@@ -214,7 +220,12 @@ EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
     pdgName.emplace(2214,"Delta+");
     pdgName.emplace(2224,"Delta++");
     pdgName.emplace(3112,"Sigma-");
+    pdgName.emplace(3114,"Sigma*-");
     pdgName.emplace(3122,"Lambda");
+    pdgName.emplace(3212,"Sigma0");
+    pdgName.emplace(3214,"Sigma*0");
+    pdgName.emplace(3222,"Sigma+");
+    pdgName.emplace(3324,"Omega*0");
 
     pdgNum.emplace(111,0);
     pdgNum.emplace(113,1);
@@ -235,7 +246,13 @@ EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
     pdgNum.emplace(2214,16);
     pdgNum.emplace(2224,17);
     pdgNum.emplace(3112,18);
-    pdgNum.emplace(3122,19);
+    pdgNum.emplace(3114,19);
+    pdgNum.emplace(3122,20);
+    pdgNum.emplace(3212,21);
+    pdgNum.emplace(3214,22);
+    pdgNum.emplace(3222,23);
+    pdgNum.emplace(3324,24);
+
 
     std::unordered_map<int,std::string>::iterator got;
     std::unordered_map<int,int>::iterator got2;
@@ -243,7 +260,7 @@ EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
       got = pdgName.find(hh);
       if(got == pdgName.end()) pdgName.emplace(hh,"unknown");
       got2 = pdgNum.find(hh);
-      if(got2 == pdgNum.end()) pdgNum.emplace(hh,20);
+      if(got2 == pdgNum.end()) pdgNum.emplace(hh,25);
     }
 
 
@@ -251,6 +268,7 @@ EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
 
 
     // Initialize tree                                                                             
+  namea="eventcount"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 100 , 0., 50.) );
   namea="darkpionmass"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 100 , 0., 50.) );
   namea="darkdaughters"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 2000 , 0., 2000.) );
   namea="test"  ; histoMap1D_.emplace( namea , fs->make<TH1F>(namea.c_str() , namea.c_str(), 3,0,3) );
@@ -297,7 +315,14 @@ EMJGenAnalyzer::~EMJGenAnalyzer()
 bool
 EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  // Reset output tree to default values                                                                            
+  icnt_=1;
+  histoMap1D_["eventcount"]->Fill(icnt_);
+  icnt_++;
+
+
+  // Reset output tree to default values                                                                     
+
+       
   otree_.Init();
   // Reset Event variables 
   event_.Init();
@@ -482,7 +507,7 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	    histoMap1D_["darkdaughters"]->Fill(aiiid);
 	    histoMap1D_["test"]->Fill(partNames[pdgNum[aiiid]],1);
 	  }
-	  if(idbg_>0) {
+	  if( (idbg_>0) && (iiid==4900111) ) {
 	    std::cout
   	     <<std::setw(8)<<std::setprecision(4)<<aiiid
   	     <<std::setw(8)<<std::setprecision(4)<<(igen->daughter(jj))->pt()
