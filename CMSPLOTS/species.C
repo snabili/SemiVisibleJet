@@ -7,9 +7,9 @@
 int dolog=0;
 void species() 
 { 
-  TFile *f1 = new TFile("../X_d_1000_mass_pi_d_10_tau_pi_d_0p001.root");
-  TFile *f2 = new TFile("../X_d_1000_mass_pi_d_5_tau_pi_d_0p001.root");  
-  TFile *f3 = new TFile("../X_d_1000_mass_pi_d_2_tau_pi_d_0p001.root");  
+  TFile *f1 = new TFile("X_d_1000_mass_pi_d_10_tau_pi_d_0p001.root");
+  TFile *f2 = new TFile("X_d_1000_mass_pi_d_5_tau_pi_d_0p001.root");  
+  TFile *f3 = new TFile("X_d_1000_mass_pi_d_2_tau_pi_d_0p001.root");  
  
   gStyle->SetOptStat(0);
  
@@ -68,10 +68,10 @@ void species()
   
   int n_ = 2;
   
-  float x1_l = 0.92;
+  float x1_l = 0.75;
   float y1_l = 0.60;
   
-  float dx_l = 0.80;
+  float dx_l = 0.60;
   float dy_l = 0.1;
   float x0_l = x1_l-dx_l;
   float y0_l = y1_l-dy_l;
@@ -106,9 +106,9 @@ void species()
   
   C_pt->Draw("same");
  
- lgd->AddEntry(A_pt, "Mass 10 GeV", "l");
- lgd->AddEntry(B_pt, "Mass 5 GeV", "l");
- lgd->AddEntry(C_pt, "Mass 2 GeV", "l");
+ lgd->AddEntry(A_pt, "dark pion 10 GeV, mediator 1000 GeV", "l");
+ lgd->AddEntry(B_pt, "5 GeV, 1000 GeV", "l");
+ lgd->AddEntry(C_pt, "2 GeV, 1000 GeV", "l");
  lgd->Draw();
     // Writing the lumi information and the CMS "logo"
    // second parameter in example_plot is iPos, which drives the position of the CMS logo in the plot
