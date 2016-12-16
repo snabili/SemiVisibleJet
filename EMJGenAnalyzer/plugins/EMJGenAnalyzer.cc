@@ -268,7 +268,7 @@ EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
 
 
     // Initialize tree                                                                             
-  namea="eventcount"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 100 , 0., 50.) );
+  namea="count"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 100 , 0., 100.) );
   namea="darkpionmass"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 100 , 0., 50.) );
   namea="darkdaughters"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 2000 , 0., 2000.) );
   namea="decays"  ; histoMap1D_.emplace( namea , fs->make<TH1F>(namea.c_str() , namea.c_str(), 3,0,3) );
@@ -320,8 +320,8 @@ bool
 EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
   icnt_=1;
-  histoMap1D_["eventcount"]->Fill(icnt_);
-  icnt_++;
+  histoMap1D_["count"]->Fill(icnt_);
+
 
 
   // Reset output tree to default values                                                                     
@@ -502,6 +502,10 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	  std::cout<<" preparing stable daughters "<<ndauch<<std::endl;
 	  std::cout<<" for a "<<darkName[iiid]<<std::endl;
 	  std::cout<<" id  pt  charge stable? name "<<std::endl;
+	}
+	if(iiid==4900111) {
+	  icnt_=2;
+          histoMap1D_["count"]->Fill(icnt_);
 	}
 	for(int jj=0;jj<ndau;jj++) {  // loop over daughters    
 	  aiiid=abs((igen->daughter(jj))->pdgId());

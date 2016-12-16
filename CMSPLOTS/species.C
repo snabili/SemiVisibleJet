@@ -79,31 +79,47 @@ void species()
  TLegend *lgd = new TLegend(x0_l,y0_l,x1_l, y1_l); 
   lgd->SetBorderSize(0); lgd->SetTextSize(0.04); lgd->SetTextFont(62); lgd->SetFillColor(0);
 
+
+  
+  TH1F *A_cnt = static_cast<TH1F*>(f1->Get("GenAnalyzer/count")->Clone());
+  float aaA = A_cnt->GetBinContent(3);
+  cout<<" number of dark pions is "<<aaA<<endl;
+  TH1F *A_pt = static_cast<TH1F*>(f1->Get("GenAnalyzer/decays")->Clone());
+  A_pt->Scale(1./aaA);
+
+  A_pt->SetDirectory(0);
+  A_pt->SetLineColor(3);
+  A_pt->SetLineWidth(3);
+  A_pt->SetStats(0);
+  A_pt->Draw("");
+
+
+  TH1F *B_cnt = static_cast<TH1F*>(f2->Get("GenAnalyzer/count")->Clone());
+  float aaB = B_cnt->GetBinContent(3);
+  cout<<" number of dark pions is "<<aaB<<endl;
   TH1F *B_pt = static_cast<TH1F*>(f2->Get("GenAnalyzer/decays")->Clone());
+  B_pt->Scale(1./aaB);
   
   B_pt->SetDirectory(0);
   B_pt->SetLineColor(2);
   B_pt->SetLineWidth(3);
   B_pt->SetStats(0);
   
-  B_pt->Draw("");
-
-  
-  TH1F *A_pt = static_cast<TH1F*>(f1->Get("GenAnalyzer/decays")->Clone());
-  A_pt->SetDirectory(0);
-  A_pt->SetLineColor(3);
-  A_pt->SetLineWidth(3);
-  A_pt->SetStats(0);
-  A_pt->Draw("same");
+  B_pt->Draw("same");
 
 
+
+  TH1F *C_cnt = static_cast<TH1F*>(f3->Get("GenAnalyzer/count")->Clone());
+  float aaC = C_cnt->GetBinContent(3);
+  cout<<" number of dark pions is "<<aaC<<endl;
   TH1F *C_pt = static_cast<TH1F*>(f3->Get("GenAnalyzer/decays")->Clone());
   
   C_pt->SetDirectory(0);
   C_pt->SetLineColor(4);
   C_pt->SetLineWidth(3);
   C_pt->SetStats(0);
-  
+  C_pt->Scale(1./aaC);  
+
   C_pt->Draw("same");
  
  lgd->AddEntry(A_pt, "dark pion 10 GeV, mediator 1000 GeV", "l");
