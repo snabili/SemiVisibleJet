@@ -271,21 +271,25 @@ EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
   namea="eventcount"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 100 , 0., 50.) );
   namea="darkpionmass"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 100 , 0., 50.) );
   namea="darkdaughters"  ; histoMap1D_.emplace( namea , fs->make<TH1D>(namea.c_str() , namea.c_str(), 2000 , 0., 2000.) );
-  namea="test"  ; histoMap1D_.emplace( namea , fs->make<TH1F>(namea.c_str() , namea.c_str(), 3,0,3) );
+  namea="decays"  ; histoMap1D_.emplace( namea , fs->make<TH1F>(namea.c_str() , namea.c_str(), 3,0,3) );
 
 
 
 
   for ( auto const & it : histoMap1D_ ) {
-    if(it.first!="test") {
+    if(it.first!="decays") {
       it.second->Sumw2();
     } else {
       it.second->SetStats(0);
       it.second->SetCanExtend(TH1::kAllAxes);
     }
   }
+  
+  for(int ij=0;ij<npart;ij++) {           
+    histoMap1D_["decays"]->Fill(partNames[ij],1);
+  }
 
-                
+   
     std::string modulename = iConfig.getParameter<std::string>("@module_label");
     tree_           = fs->make<TTree>("emJetTree","emJetTree");
     otree_.Branch(tree_);
@@ -505,7 +509,7 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	  // histogram for dark pions of daughter ids if has at least one stable daughter
 	  if(iiid==4900111) {
 	    histoMap1D_["darkdaughters"]->Fill(aiiid);
-	    histoMap1D_["test"]->Fill(partNames[pdgNum[aiiid]],1);
+	    histoMap1D_["decays"]->Fill(partNames[pdgNum[aiiid]],1);
 	  }
 	  if( (idbg_>0) && (iiid==4900111) ) {
 	    std::cout
@@ -540,9 +544,9 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
     icntg++;
   }
 
-  histoMap1D_["test"]->LabelsDeflate();
-  histoMap1D_["test"]->LabelsOption("v");
-  histoMap1D_["test"]->LabelsOption("a");
+  histoMap1D_["decays"]->LabelsDeflate();
+  histoMap1D_["decays"]->LabelsOption("v");
+  histoMap1D_["decays"]->LabelsOption("a");
   
 
   // store gen jet information
