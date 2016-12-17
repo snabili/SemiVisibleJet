@@ -99,7 +99,6 @@ cat $PARAMETER_SET \
 | sed -e s/CONDOR_SKIPEVENTS/$SKIP_EVENTS/ \
 | sed -e s~CONDOR_OUTPUTFILENAME~$FINAL_FILENAME~ \
 | sed -e s~CONDOR_HISTOFILENAME~$FINAL_HISTONAME~ \
-| sed -e s~CONDOR_INPUTFILENAME~
 > $FINAL_PARAMETER_SET
 
 #
@@ -107,7 +106,7 @@ cat $PARAMETER_SET \
 #
 
 echo "run: time cmsRun $FINAL_PARAMETER_SET > $FINAL_LOG 2>&1"
-cmsRun inputFiles=X_d_1000_pi_2_lt0p001.txt $FINAL_PARAMETER_SET >> $FINAL_LOG 2>&1
+cmsRun $FINAL_PARAMETER_SET inputFiles_load=$INPUTFILES  >> $FINAL_LOG 2>&1
 exitcode=$?
 
 # The RandomNumberServiceHelper wants the log placed in the running dir.
