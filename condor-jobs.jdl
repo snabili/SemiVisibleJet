@@ -5,5 +5,5 @@ Requirements = TARGET.FileSystemDomain == "privnet"
 Output = /data/users/eno/output/sce_$(cluster)_$(process).stdout
 Error  = /data/users/eno/output/sce_$(cluster)_$(process).stderr
 Log    = /data/users/eno/output/sce_$(cluster)_$(process).condor
-Arguments = sce_$(cluster) $(process) /data/users/eno/output/  /data/users/eno/emergingJets4/CMSSW_7_6_3/src/EmergingJetGenAnalysis  Configuration/test/condor_cfg.py 1234567 10000 X_d_1000_pi_2_lt0p001.txt
+Arguments = sce_$(cluster) $(process) /data/users/eno/output/  /data/users/eno/emergingJets4/CMSSW_7_6_3/src/EmergingJetGenAnalysis  Configuration/test/condor_cfg.py 1234567 10000 MYFILENAME
 Queue 1
