@@ -87,6 +87,10 @@ void species()
   TH1F *A_pt = static_cast<TH1F*>(f1->Get("GenAnalyzer/decays")->Clone());
   A_pt->Scale(1./aaA);
 
+  A_pt->GetYaxis()->SetTitle("mean per decay");  
+  A_pt->GetYaxis()->SetTitleSize(0.05);  
+
+
   A_pt->SetDirectory(0);
   A_pt->SetLineColor(3);
   A_pt->SetLineWidth(3);
@@ -122,9 +126,9 @@ void species()
 
   C_pt->Draw("same");
  
- lgd->AddEntry(A_pt, "dark pion 10 GeV, mediator 1000 GeV", "l");
- lgd->AddEntry(B_pt, "5 GeV, 1000 GeV", "l");
- lgd->AddEntry(C_pt, "2 GeV, 1000 GeV", "l");
+ lgd->AddEntry(A_pt, "dark pion 10 GeV", "l");
+ lgd->AddEntry(B_pt, "5 GeV", "l");
+ lgd->AddEntry(C_pt, "2 GeV", "l");
  lgd->Draw();
     // Writing the lumi information and the CMS "logo"
    // second parameter in example_plot is iPos, which drives the position of the CMS logo in the plot
