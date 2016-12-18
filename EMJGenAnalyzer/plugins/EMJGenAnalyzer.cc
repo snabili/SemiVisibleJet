@@ -296,7 +296,7 @@ EMJGenAnalyzer::EMJGenAnalyzer(const edm::ParameterSet& iConfig) {
   }
 
   //  idbg_ = iConfig.getUntrackedParameter<int>("idbg");
-  idbg_=10;
+  idbg_=0;
   std::cout<<"idbg_ is "<<idbg_<<std::endl;
 
   //  edm::ConsumesCollector iC = consumesCollector();

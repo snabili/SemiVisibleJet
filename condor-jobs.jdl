@@ -2,8 +2,8 @@ universe = vanilla
 Executable = condor-executable.sh
 should_transfer_files = NO
 Requirements = TARGET.FileSystemDomain == "privnet"
-Output = /data/users/eno/output/sce_$(cluster)_$(process).stdout
-Error  = /data/users/eno/output/sce_$(cluster)_$(process).stderr
-Log    = /data/users/eno/output/sce_$(cluster)_$(process).condor
-Arguments = sce_$(cluster) $(process) /data/users/eno/output/  /data/users/eno/emergingJets4/CMSSW_7_6_3/src/EmergingJetGenAnalysis  Configuration/test/condor_cfg.py 1234567 10000 MYFILENAME
+Output = /data/users/eno/output/MYPREFIX_sce_$(cluster)_$(process).stdout
+Error  = /data/users/eno/output/MYPREFIX_sce_$(cluster)_$(process).stderr
+Log    = /data/users/eno/output/MYPREFIX_sce_$(cluster)_$(process).condor
+Arguments = MYPREFIX  $(process) /data/users/eno/output/  /data/users/eno/emergingJets4/CMSSW_7_6_3/src/EmergingJetGenAnalysis  Configuration/test/condor_cfg.py 1234567 10000 MYFILENAME
 Queue 1
