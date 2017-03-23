@@ -1,0 +1,1 @@
+das_client --query="file dataset=/EmergingJets_mass_X_d_2000_mass_pi_d_1_tau_pi_d_0p001_TuneCUETP8M1_13TeV_pythia8Mod/yoshin-mass_X_d_2000_mass_pi_d_1_tau_pi_d_0p001-2197f8f0c5284f6ede85896abc7b63b1/USER  instance=prod/phys03" --limit=0 > lala.txt

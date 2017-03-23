@@ -1,0 +1,1 @@
+das_client --query="file dataset=FILENAME  instance=prod/phys03" --limit=0 > lala.txt

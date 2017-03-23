@@ -82,16 +82,18 @@ void species()
 
   
   TH1F *A_cnt = static_cast<TH1F*>(f1->Get("GenAnalyzer/count")->Clone());
+  A_cnt->SetDirectory(0);
   float aaA = A_cnt->GetBinContent(3);
   cout<<" number of dark pions is "<<aaA<<endl;
   TH1F *A_pt = static_cast<TH1F*>(f1->Get("GenAnalyzer/decays")->Clone());
+  A_pt->SetDirectory(0);
   A_pt->Scale(1./aaA);
 
   A_pt->GetYaxis()->SetTitle("mean per decay");  
   A_pt->GetYaxis()->SetTitleSize(0.05);  
 
 
-  A_pt->SetDirectory(0);
+
   A_pt->SetLineColor(3);
   A_pt->SetLineWidth(3);
   A_pt->SetStats(0);
@@ -99,12 +101,14 @@ void species()
 
 
   TH1F *B_cnt = static_cast<TH1F*>(f2->Get("GenAnalyzer/count")->Clone());
+  B_cnt->SetDirectory(0);
   float aaB = B_cnt->GetBinContent(3);
   cout<<" number of dark pions is "<<aaB<<endl;
   TH1F *B_pt = static_cast<TH1F*>(f2->Get("GenAnalyzer/decays")->Clone());
+  B_pt->SetDirectory(0);
   B_pt->Scale(1./aaB);
   
-  B_pt->SetDirectory(0);
+
   B_pt->SetLineColor(2);
   B_pt->SetLineWidth(3);
   B_pt->SetStats(0);

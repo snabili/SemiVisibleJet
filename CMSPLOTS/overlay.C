@@ -1,14 +1,14 @@
 
-#include "CMSPLOTS/tdrstyle.C"
-#include "CMSPLOTS/CMS_lumi.C"
+#include "tdrstyle.C"
+#include "CMS_lumi.C"
 #include "TH1.h"
 #include "TH1F.h"
 
 int dolog=1;
 void overlay() 
 { 
-  TFile *f1 = new TFile("haha-A.root");
-  TFile *f2 = new TFile("haha-B.root");  
+  TFile *fA = new TFile("ModelA.root");
+  TFile *fB = new TFile("ModelB.root");  
  
   gStyle->SetOptStat(0);
  
@@ -43,13 +43,13 @@ void overlay()
   
   if (dolog) canv->SetLogy();
 
-  TH1* h_pt = new TH1F("h_pt"," ",100,0,500);
+  TH1* h_pt = new TH1F("h_pt"," ",100,0.,100.);
   h_pt->GetXaxis()->SetNdivisions(6,5,0);
-  h_pt->GetXaxis()->SetTitle("Dark Pion p_{T} (GeV)");  
+  h_pt->GetXaxis()->SetTitle("Number of dark pions");  
   h_pt->GetXaxis()->SetTitleSize(0.05);  
   h_pt->GetYaxis()->SetNdivisions(6,5,0);
   h_pt->GetYaxis()->SetTitleOffset(1);
-  h_pt->GetYaxis()->SetTitle("Events / 5 GeV");  
+  h_pt->GetYaxis()->SetTitle("A.U.");  
   h_pt->GetYaxis()->SetTitleSize(0.05);  
   
   //int max=  test->GetMaximum() + test->GetMaximum()*0.2; 
@@ -67,8 +67,8 @@ void overlay()
   
   int n_ = 2;
   
-  float x1_l = 0.92;
-  float y1_l = 0.60;
+  float x1_l = 1.;
+  float y1_l = 0.80;
   
   float dx_l = 0.30;
   float dy_l = 0.18;
@@ -78,21 +78,24 @@ void overlay()
  TLegend *lgd = new TLegend(x0_l,y0_l,x1_l, y1_l); 
   lgd->SetBorderSize(0); lgd->SetTextSize(0.04); lgd->SetTextFont(62); lgd->SetFillColor(0);
   
-  TH1F *A_pt = static_cast<TH1F*>(f1->Get("hptdp")->Clone());
-  A_pt->SetDirectory(0);
-  A_pt->SetLineColor(3);
-  A_pt->SetLineWidth(3);
-  A_pt->SetStats(0);
-  A_pt->Draw("same");
 
-  TH1F *B_pt = static_cast<TH1F*>(f2->Get("hptdp")->Clone());
+  TH1F *B_pt = static_cast<TH1F*>(fB->Get("hndp")->Clone());
   
   B_pt->SetDirectory(0);
   B_pt->SetLineColor(2);
   B_pt->SetLineWidth(3);
   B_pt->SetStats(0);
   
-  B_pt->Draw("same");
+  B_pt->Draw("");
+
+
+  TH1F *A_pt = static_cast<TH1F*>(fA->Get("hndp")->Clone());
+  A_pt->SetDirectory(0);
+  A_pt->SetLineColor(3);
+  A_pt->SetLineWidth(3);
+  A_pt->SetStats(0);
+  A_pt->Draw("same");
+
  
  lgd->AddEntry(A_pt, "Model A", "l");
  lgd->AddEntry(B_pt, "Model B", "l");
@@ -124,7 +127,7 @@ void overlay()
   else{ 
     canv->Print(canvName+".pdf",".pdf");
     canv->Print(canvName+".png",".png");}
-  return canv;
+  return;
 }
 
 
