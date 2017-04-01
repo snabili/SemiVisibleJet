@@ -1,4 +1,4 @@
-xc//
+//
 // Package:    EmergingJetGenAnalysis/EMJGenAnalyzer
 // Class:      EMJGenAnalyzer
 //
@@ -364,6 +364,10 @@ EMJGenAnalyzer::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
 
     int icho=0; // see if it is one we want to save
+
+    if(idbg_>0) {
+      if(iiid>4900000) std::cout<<"iiid = "<<iiid<<std::endl;
+    }
 
     //look for dark pions or dark rhos that decay to stable particles
     if( (iiid==4900111)||(iiid==4900113)) { 

@@ -93,7 +93,9 @@ void SCEprint(){
     //gen particles variables
     Int_t ndark=0;
     for(Int_t j=0; j<(*genpart_index).size(); j++) {
-      cout<<" genpart "<<(*genpart_pt)[j]<<endl;
+      if((std::abs((*genpart_pid)[j]))>4900000) {
+	  cout<<" genpart "<<(*genpart_pt)[j]<<" "<<(*genpart_pid)[j]<<endl;
+	}
       if(abs((*genpart_pid)[j])==4900111){ // dark pion
 	ndark=ndark+1;
 	hptdp->Fill((*genpart_pt)[j]);
